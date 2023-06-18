@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39ee9093131245e41abe198aaadf6754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectible: {fileID: 0}
+  collectible: {fileID: 9214228998303237415, guid: 4a5cd95dd54c8cf448a8ccf82bd3dac8,
+    type: 3}
   collectibleCount: 10
 --- !u!65 &7879832810300513823
 BoxCollider:
