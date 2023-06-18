@@ -14,32 +14,64 @@ public class Collectible : MonoBehaviour
 
     public CollectibleType CollectibleType;
 
+    private AudioSource audioSource;
+
+    private bool isAudioPlaying = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //spherecheck for player collision, within pull distance move towards player,
-        //within pickup distance, add to player inventory
-        Collider[] hitColliders =
-            Physics.OverlapSphere(transform.position, pullDistance);
-        foreach (var hitCollider in hitColliders)
-        if (hitCollider.gameObject.CompareTag("Player"))
+        if (!isAudioPlaying)
         {
-            //if within pickup distance, add to player inventory
-            if (
-                Vector3
-                    .Distance(transform.position,
-                    hitCollider.transform.position) <
-                1
-            )
+            // Sphere check for player collision, within pull distance move towards player,
+            // within pickup distance, add to player inventory
+            Collider[] hitColliders =
+                Physics.OverlapSphere(transform.position, pullDistance);
+            foreach (var hitCollider in hitColliders)
             {
-                //CollectibleType.PickUp();
-                Destroy (gameObject);
+                if (hitCollider.gameObject.CompareTag("Player"))
+                {
+                    // If within pickup distance, add to player inventory
+                    if (
+                        Vector3
+                            .Distance(transform.position,
+                            hitCollider.transform.position) <
+                        1
+                    )
+                    {
+                        // CollectibleType.PickUp();
+                        if (audioSource != null)
+                        {
+                            PlayAudio();
+                            return; // Exit the method to wait for audio to finish playing
+                        }
+                    }
+                }
             }
         }
+    }
+
+    public void PlayAudio()
+    {
+        if (audioSource != null)
+        {
+            audioSource.Play();
+            isAudioPlaying = true;
+            StartCoroutine(WaitForAudio());
+            GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
+
+    private IEnumerator WaitForAudio()
+    {
+        yield return new WaitForSeconds(audioSource.clip.length);
+        isAudioPlaying = false;
+        Destroy (gameObject);
     }
 }
