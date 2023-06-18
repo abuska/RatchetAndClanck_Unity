@@ -22,8 +22,40 @@ public class Collectible : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //spherecheck for player collision
+        //spherecheck for player collision, within pull distance move towards player,
+        //within pickup distance, add to player inventory
         Collider[] hitColliders =
-            Physics.OverlapSphere(transform.position, 1f, 1 << 6);
+            Physics.OverlapSphere(transform.position, pullDistance);
+        foreach (var hitCollider in hitColliders)
+        if (hitCollider.gameObject.CompareTag("Player"))
+        {
+            //move towards player
+            Vector3 direction =
+                hitCollider.transform.position - transform.position;
+            direction.Normalize();
+            transform.position += direction * pullSpeed * Time.deltaTime;
+
+            //rotate
+            transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
+
+            //limit speed
+            if (GetComponent<Rigidbody>().velocity.magnitude > maxSpeed)
+            {
+                GetComponent<Rigidbody>().velocity =
+                    GetComponent<Rigidbody>().velocity.normalized * maxSpeed;
+            }
+
+            //if within pickup distance, add to player inventory
+            if (
+                Vector3
+                    .Distance(transform.position,
+                    hitCollider.transform.position) <
+                1
+            )
+            {
+                //CollectibleType.PickUp();
+                Destroy (gameObject);
+            }
+        }
     }
 }
