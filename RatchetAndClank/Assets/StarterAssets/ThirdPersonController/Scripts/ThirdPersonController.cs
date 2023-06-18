@@ -55,8 +55,8 @@ namespace StarterAssets
         public float JumpTimeout = 0.50f;
 
         [Space(10)]
-        [Tooltip("If the caracter can double jump")]
-        public bool CanDoubleJump = false;
+        [Tooltip("number of jumps")]
+        public int CanJump = 2;
 
         [
             Tooltip(
@@ -240,7 +240,7 @@ namespace StarterAssets
                     QueryTriggerInteraction.Ignore);
             if (Grounded)
             {
-                CanDoubleJump = true;
+                CanJump = 2;
             }
 
             // update animator if using character
@@ -369,7 +369,8 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-            if (Grounded)
+            //Debug.Log("CanJump" + CanJump);
+            if ((Grounded || CanJump > 0))
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
@@ -387,8 +388,8 @@ namespace StarterAssets
                     _verticalVelocity = -2f;
                 }
 
-                // Jump
-                if (_input.jump && (_jumpTimeoutDelta <= 0.0f || CanDoubleJump))
+                // Jump if input button is pressed the input timeout is set
+                if (_input.jump && (_jumpTimeoutDelta <= 0.0f))
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
@@ -397,7 +398,9 @@ namespace StarterAssets
                     if (_hasAnimator)
                     {
                         _animator.SetBool(_animIDJump, true);
-                        //
+
+                        //decrease remaining jumps
+                        CanJump--;
                     }
                 }
 
@@ -406,6 +409,7 @@ namespace StarterAssets
                 {
                     _jumpTimeoutDelta -= Time.deltaTime;
                 }
+                _input.jump = false;
             }
             else
             {
@@ -427,7 +431,7 @@ namespace StarterAssets
                 }
 
                 // if we are not grounded, do not jump
-                _input.jump = false;
+                // _input.jump = false;
             }
 
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
