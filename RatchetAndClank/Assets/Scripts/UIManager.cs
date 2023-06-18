@@ -62,12 +62,12 @@ public class UIManager : MonoBehaviour
         
         DisableSaveMenu();
     }
+
+    //Search for the slot name and set the text by the save data
     private void setSlotText(string slotName, GameManager.SaveSlot slot)
     {
         GameObject SlotObject = GameObject.Find(slotName);
-        Debug.Log("SlotObject: " + SlotObject);
         GameObject SlotTextObject = SlotObject.transform.Find("Text").gameObject;
-        Debug.Log("SlotTextObject: " + SlotTextObject);
         TMP_Text Slot = SlotTextObject.GetComponent<TextMeshProUGUI>();
 
         Debug.Log("Slot: " + Slot);
