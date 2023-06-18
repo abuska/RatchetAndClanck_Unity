@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -13,8 +14,6 @@ public class UIManager : MonoBehaviour
     private static GameObject LoadMenuUI;
     [SerializeField]
     private static GameObject SaveMenuUI;
-
-    
 
 
     private void Awake()
@@ -53,16 +52,45 @@ public class UIManager : MonoBehaviour
 
     public void EnableLoadMenu()
     {
+        GameManager.SaveData saveData = GameObject.Find("GameManager").GetComponent<GameManager>().GetSaveData();
 
         transform.GetChild(3).gameObject.SetActive(true);
         LoadMenuUI = GameObject.Find("LoadMenu");
+        setSlotText("Slot1", saveData.slot1);
+        setSlotText("Slot2", saveData.slot2);
+        setSlotText("Slot3", saveData.slot3);
+        
         DisableSaveMenu();
+    }
+    private void setSlotText(string slotName, GameManager.SaveSlot slot)
+    {
+        GameObject SlotObject = GameObject.Find(slotName);
+        Debug.Log("SlotObject: " + SlotObject);
+        GameObject SlotTextObject = SlotObject.transform.Find("Text").gameObject;
+        Debug.Log("SlotTextObject: " + SlotTextObject);
+        TMP_Text Slot = SlotTextObject.GetComponent<TextMeshProUGUI>();
+
+        Debug.Log("Slot: " + Slot);
+        
+        if (slot != null && slot.activeScreenName != null)
+        {
+            Slot.text = slot.activeScreenName+": "+slot.lastSaveDate;
+        }
+        else
+        {
+            Slot.text = "Empty";
+        }
     }
     
     public void EnableSaveMenu()
     {
+        GameManager.SaveData saveData = GameObject.Find("GameManager").GetComponent<GameManager>().GetSaveData();
+
         transform.GetChild(2).gameObject.SetActive(true);
         SaveMenuUI = GameObject.Find("SaveMenu");
+        setSlotText("Slot1", saveData.slot1);
+        setSlotText("Slot2", saveData.slot2);
+        setSlotText("Slot3", saveData.slot3);
         DisableLoadMenu();
     }
 
