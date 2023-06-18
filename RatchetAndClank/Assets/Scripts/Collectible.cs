@@ -29,22 +29,6 @@ public class Collectible : MonoBehaviour
         foreach (var hitCollider in hitColliders)
         if (hitCollider.gameObject.CompareTag("Player"))
         {
-            //move towards player
-            Vector3 direction =
-                hitCollider.transform.position - transform.position;
-            direction.Normalize();
-            transform.position += direction * pullSpeed * Time.deltaTime;
-
-            //rotate
-            transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
-
-            //limit speed
-            if (GetComponent<Rigidbody>().velocity.magnitude > maxSpeed)
-            {
-                GetComponent<Rigidbody>().velocity =
-                    GetComponent<Rigidbody>().velocity.normalized * maxSpeed;
-            }
-
             //if within pickup distance, add to player inventory
             if (
                 Vector3
