@@ -42,7 +42,7 @@ public class Collectible : MonoBehaviour
                         Vector3
                             .Distance(transform.position,
                             hitCollider.transform.position) <
-                        1
+                        2
                     )
                     {
                         // CollectibleType.PickUp();

@@ -385,7 +385,14 @@ namespace StarterAssets
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
                 {
-                    _verticalVelocity = -2f;
+                    if (Grounded)
+                    {
+                        _verticalVelocity = -2f;
+                    }
+                    else
+                    {
+                        _verticalVelocity -= -0.01f;
+                    }
                 }
 
                 // Jump if input button is pressed the input timeout is set
