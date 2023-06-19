@@ -38,6 +38,7 @@ public class Collectible : MonoBehaviour
                 if (hitCollider.gameObject.CompareTag("Player"))
                 {
                     // If within pickup distance, add to player inventory
+                    //TODO FIX DISTANCE
                     if (
                         Vector3
                             .Distance(transform.position,
