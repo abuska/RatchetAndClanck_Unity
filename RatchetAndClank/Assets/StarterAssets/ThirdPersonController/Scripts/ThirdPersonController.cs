@@ -285,7 +285,7 @@ namespace StarterAssets
         }
         
         private void LedgeGrab(){
-            if(_controller.velocity.y < 0 && !hanging){
+            if(_controller.velocity.y < 0 && !hanging && !Grounded){
                 // This is the raycast that checks if there is a ledge below the player
                 RaycastHit downHit;
                 // TODO check magic numbers
