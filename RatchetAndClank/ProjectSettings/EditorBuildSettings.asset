@@ -6,9 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
-    guid: dd030d722aa363845a4048cccb1da698
-  - enabled: 1
     path: Assets/Scenes/CanvasAndGameManager.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Playground.unity
+    guid: 36e962af4b7b0c249b9f581e3463a29a
+  - enabled: 1
+    path: Assets/Scenes/TrainingGround.unity
+    guid: f7ca679071a82a04d9bfef42c5dc78f6
+  - enabled: 1
+    path: Assets/Scenes/Level1.unity
+    guid: dd030d722aa363845a4048cccb1da698
   m_configObjects: {}
