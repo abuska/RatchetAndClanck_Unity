@@ -286,6 +286,7 @@ namespace StarterAssets
         
         private void LedgeGrab(){
             if(_controller.velocity.y < 0 && !hanging){
+                // This is the raycast that checks if there is a ledge below the player
                 RaycastHit downHit;
                 // TODO check magic numbers
                 Vector3 lineDownStart = (transform.position + Vector3.up * 1.8f)+ transform.forward * 0.5f;
@@ -294,23 +295,27 @@ namespace StarterAssets
                 Debug.DrawLine(lineDownStart, lineDownEnd, Color.red);
 
                 if(downHit.collider != null){
+                    // This is the raycast that checks if there is a wall in front of the player
                     RaycastHit forwardHit;
-                    // TODO check magic numbers
                     Vector3 lineForwardStart = new Vector3(transform.position.x, downHit.point.y-0.1f, transform.position.z);
                     Vector3 lineForwardEnd = new Vector3(transform.position.x, downHit.point.y-0.1f, transform.position.z) + transform.forward * 0.5f;
                     Physics.Linecast(lineForwardStart, lineForwardEnd, out forwardHit, GroundLayers);
                     Debug.DrawLine(lineForwardStart, lineForwardEnd, Color.red);
                     if(forwardHit.collider != null){
+
                         hanging = true;
                         CanJump = 2;
+
                         _controller.SimpleMove(Vector3.zero);
                         _controller.enabled = false;
+                        
                         transform.position = new Vector3(transform.position.x, downHit.point.y, transform.position.z);
                         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
-                        //Animator play hanging animation
+
                          _animator.SetBool("Hanging", true);
                         Vector3 hangingPosition = new Vector3(forwardHit.point.x, downHit.point.y, forwardHit.point.z);
                         Vector3 offset = transform.forward * -0.3f + transform.up * -1.5f;
+                        
                         hangingPosition += offset;
                         transform.position = hangingPosition;
                         transform.forward = -forwardHit.normal;
@@ -445,13 +450,17 @@ namespace StarterAssets
 
                     }
 
-                        // the square root of H * -2 * G = how much velocity needed to reach desired height
-                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-
                         // update animator if using character
                         if (_hasAnimator)
                         {
-                            _animator.SetBool(_animIDJump, true);
+                            if(Grounded){
+                                _animator.SetBool(_animIDJump, true);
+                            }else{
+                                _animator.SetTrigger("JumpInAir");
+                            }
+
+                        // the square root of H * -2 * G = how much velocity needed to reach desired height
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
                             //decrease remaining jumps
                             CanJump--;
