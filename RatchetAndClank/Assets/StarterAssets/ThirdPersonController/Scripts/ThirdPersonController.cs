@@ -83,6 +83,9 @@ namespace StarterAssets
         [Tooltip("What layers the character uses as ground")]
         public LayerMask GroundLayers;
 
+        [Header("Hanging")]
+        public bool hanging;
+
         [Header("Cinemachine")]
         [
             Tooltip(
@@ -205,10 +208,12 @@ namespace StarterAssets
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
-
+            LedgeGrab();
             JumpAndGravity();
             GroundedCheck();
-            Move();
+            if(!hanging){
+                Move();
+            }
         }
 
         private void LateUpdate()
@@ -277,6 +282,41 @@ namespace StarterAssets
                     .Euler(_cinemachineTargetPitch + CameraAngleOverride,
                     _cinemachineTargetYaw,
                     0.0f);
+        }
+        
+        private void LedgeGrab(){
+            if(_controller.velocity.y < 0 && !hanging){
+                RaycastHit downHit;
+                // TODO check magic numbers
+                Vector3 lineDownStart = (transform.position + Vector3.up * 1.8f)+ transform.forward * 0.5f;
+                Vector3 lineDownEnd = (transform.position + Vector3.up * 0.7f)+ transform.forward * 0.5f;
+                Physics.Linecast(lineDownStart, lineDownEnd, out downHit, GroundLayers);
+                Debug.DrawLine(lineDownStart, lineDownEnd, Color.red);
+
+                if(downHit.collider != null){
+                    RaycastHit forwardHit;
+                    // TODO check magic numbers
+                    Vector3 lineForwardStart = new Vector3(transform.position.x, downHit.point.y-0.1f, transform.position.z);
+                    Vector3 lineForwardEnd = new Vector3(transform.position.x, downHit.point.y-0.1f, transform.position.z) + transform.forward * 0.5f;
+                    Physics.Linecast(lineForwardStart, lineForwardEnd, out forwardHit, GroundLayers);
+                    Debug.DrawLine(lineForwardStart, lineForwardEnd, Color.red);
+                    if(forwardHit.collider != null){
+                        hanging = true;
+                        CanJump = 2;
+                        _controller.SimpleMove(Vector3.zero);
+                        _controller.enabled = false;
+                        transform.position = new Vector3(transform.position.x, downHit.point.y, transform.position.z);
+                        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+                        //Animator play hanging animation
+                         _animator.SetBool("Hanging", true);
+                        Vector3 hangingPosition = new Vector3(forwardHit.point.x, downHit.point.y, forwardHit.point.z);
+                        Vector3 offset = transform.forward * -0.3f + transform.up * -1.5f;
+                        hangingPosition += offset;
+                        transform.position = hangingPosition;
+                        transform.forward = -forwardHit.normal;
+                    }
+                }
+            }
         }
 
         private void Move()
@@ -370,7 +410,7 @@ namespace StarterAssets
         private void JumpAndGravity()
         {
             //Debug.Log("CanJump" + CanJump);
-            if ((Grounded || CanJump > 0))
+            if ((Grounded || CanJump > 0) || hanging)
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
@@ -398,17 +438,25 @@ namespace StarterAssets
                 // Jump if input button is pressed the input timeout is set
                 if (_input.jump && (_jumpTimeoutDelta <= 0.0f))
                 {
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                    if(hanging){
+                        _controller.enabled = true;
+                        _animator.SetBool("Hanging", false);
+                        hanging=false;
 
-                    // update animator if using character
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDJump, true);
-
-                        //decrease remaining jumps
-                        CanJump--;
                     }
+
+                        // the square root of H * -2 * G = how much velocity needed to reach desired height
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+
+                        // update animator if using character
+                        if (_hasAnimator)
+                        {
+                            _animator.SetBool(_animIDJump, true);
+
+                            //decrease remaining jumps
+                            CanJump--;
+                        }
+                    
                 }
 
                 // jump timeout
