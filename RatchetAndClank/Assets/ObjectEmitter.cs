@@ -15,7 +15,7 @@ public class ObjectEmitter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.gameObject.CompareTag("Player")) return;
+        if (!other.gameObject.CompareTag("Weapon")) return;
         Debug.Log("Emit Triggered");
         Emit();
     }
@@ -26,7 +26,8 @@ public class ObjectEmitter : MonoBehaviour
     public void Emit()
     {
         Animator animator = GetComponentInParent<Animator>();
-        animator.SetTrigger("IsBroken");
+
+        //animator.SetTrigger("IsBroken");
         for (int i = 0; i < collectibleCount; i++)
         {
             Vector3 position = transform.position;
@@ -34,6 +35,10 @@ public class ObjectEmitter : MonoBehaviour
             position.z += Random.Range(-2f, 2f);
             Instantiate(collectible, position, Quaternion.identity);
         }
+
+        //wait for animation to finish
+        //destroy parent after emitting
+        Destroy(transform.parent.gameObject);
     }
 
     // Update is called once per frame
