@@ -8,16 +8,13 @@ public class ObjectEmitter : MonoBehaviour
 
     public int collectibleCount = 10;
 
+    public bool canBeTriggered = true;
+
+    public bool destroyAfterEmit = true;
+
     // Start is called before the first frame update
     void Start()
     {
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!other.gameObject.CompareTag("Weapon")) return;
-        Debug.Log("Emit Triggered");
-        Emit();
     }
 
     /*function that when called, 
@@ -27,7 +24,6 @@ public class ObjectEmitter : MonoBehaviour
     {
         Animator animator = GetComponentInParent<Animator>();
 
-        //animator.SetTrigger("IsBroken");
         for (int i = 0; i < collectibleCount; i++)
         {
             Vector3 position = transform.position;
@@ -38,7 +34,20 @@ public class ObjectEmitter : MonoBehaviour
 
         //wait for animation to finish
         //destroy parent after emitting
-        Destroy(transform.parent.gameObject);
+        if (destroyAfterEmit)
+        {
+            Destroy(transform.parent.gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (canBeTriggered)
+        {
+            if (!other.gameObject.CompareTag("Weapon")) return;
+            Debug.Log("Emit Triggered");
+            Emit();
+        }
     }
 
     // Update is called once per frame
