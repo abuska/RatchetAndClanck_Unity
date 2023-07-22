@@ -30,7 +30,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.6
+        time: 0.083333336
         value: 1
         inSlope: 0
         outSlope: 0
@@ -49,15 +49,17 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 2100000, guid: e409d172086d23c428c6d8820770bcdd, type: 2}
-    - time: 0.6
+    - time: 0.7
       value: {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
-    - time: 0.93333334
+    - time: 0.98333335
       value: {fileID: 2100000, guid: e409d172086d23c428c6d8820770bcdd, type: 2}
-    - time: 1.2
+    - time: 1.6333333
       value: {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
-    - time: 1.5333333
+    - time: 1.65
+      value: {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
+    - time: 2.1833334
       value: {fileID: 2100000, guid: e409d172086d23c428c6d8820770bcdd, type: 2}
-    - time: 1.8666667
+    - time: 3.3
       value: {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
     attribute: m_Materials.Array.data[1]
     path: 
@@ -89,6 +91,7 @@ AnimationClip:
     - {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
     - {fileID: 2100000, guid: e409d172086d23c428c6d8820770bcdd, type: 2}
     - {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
+    - {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
     - {fileID: 2100000, guid: e409d172086d23c428c6d8820770bcdd, type: 2}
     - {fileID: 2100000, guid: 968a0d2f8651c30449a911410fc77679, type: 2}
   m_AnimationClipSettings:
@@ -96,7 +99,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1.8833333
+    m_StopTime: 3.3166666
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -125,7 +128,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.6
+        time: 0.083333336
         value: 1
         inSlope: 0
         outSlope: 0
@@ -152,14 +155,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.5333333
+  - time: 2.6666667
     functionName: EnambleParticleSystem
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.6
+  - time: 2.8333333
     functionName: PlayAudioSource
     data: 
     objectReferenceParameter: {fileID: 8300000, guid: e94385ae26bc9854bbe4591746c705a9,
@@ -167,28 +170,28 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.65
+  - time: 3
     functionName: Emit
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.75
-    functionName: ExplodeNearbyBoxes
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.8166667
+  - time: 3.2166667
     functionName: DamagePlayer
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.8666667
+  - time: 3.2333333
+    functionName: ExplodeNearbyBoxes
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 3.2666667
     functionName: DestroyBox
     data: 
     objectReferenceParameter: {fileID: 0}
