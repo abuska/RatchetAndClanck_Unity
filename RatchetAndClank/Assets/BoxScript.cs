@@ -14,10 +14,15 @@ public class BoxScript : MonoBehaviour
 
     public BoxTypeEnum boxType;
 
+    public float explosionRange = 2f;
+
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.GetComponentInChildren<ParticleSystem>().Stop();
+        if (gameObject.GetComponentInChildren<ParticleSystem>() != null)
+        {
+            gameObject.GetComponentInChildren<ParticleSystem>().Stop();
+        }
     }
 
     // Update is called once per frame
@@ -53,7 +58,8 @@ public class BoxScript : MonoBehaviour
 
     public void DamagePlayer()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f);
+        Collider[] colliders =
+            Physics.OverlapSphere(transform.position, explosionRange);
         foreach (Collider collider in colliders)
         {
             GameObject OtherGameObject = collider.gameObject;
@@ -66,18 +72,25 @@ public class BoxScript : MonoBehaviour
 
     public void ExplodeNearbyBoxes()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f);
+        Collider[] colliders =
+            Physics.OverlapSphere(transform.position, explosionRange);
 
         foreach (Collider collider in colliders)
         {
             GameObject OtherGameObject = collider.gameObject;
-            if (
-                OtherGameObject.CompareTag("Box") &&
-                OtherGameObject.GetComponent<BoxScript>().boxType ==
-                BoxTypeEnum.Explosive
-            )
+            if (OtherGameObject.CompareTag("Box"))
             {
-                OtherGameObject.GetComponent<BoxScript>().ExplodeBox();
+                if (
+                    OtherGameObject.GetComponent<BoxScript>().boxType ==
+                    BoxTypeEnum.Explosive
+                )
+                {
+                    OtherGameObject.GetComponent<BoxScript>().ExplodeBox();
+                }
+                else
+                {
+                    OtherGameObject.GetComponent<BoxScript>().Emit();
+                }
             }
         }
     }

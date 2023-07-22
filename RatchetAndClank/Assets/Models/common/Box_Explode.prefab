@@ -60,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectible: {fileID: 9214228998303237415, guid: 4a5cd95dd54c8cf448a8ccf82bd3dac8,
     type: 3}
-  collectibleCount: 10
+  collectibleCount: 3
   canBeTriggered: 0
   destroyAfterEmit: 0
 --- !u!1 &7682780838875576129
