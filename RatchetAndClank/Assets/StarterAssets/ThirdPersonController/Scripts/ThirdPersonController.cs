@@ -131,6 +131,12 @@ namespace StarterAssets
 
         private float _fallTimeoutDelta;
 
+        private float _AttackCoolDown = 0.7f;
+
+        private float _AttakTimeoutTimer = Mathf.Infinity;
+
+        private GameObject MeleeWeapon;
+
         // animation IDs
         private int _animIDSpeed;
 
@@ -189,6 +195,8 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
+            MeleeWeapon = GameObject.Find("MonkeyWrench");
+            MeleeWeapon.GetComponentInChildren<Collider>().enabled = false;
 
 
 #if ENABLE_INPUT_SYSTEM
@@ -211,8 +219,14 @@ namespace StarterAssets
             LedgeGrab();
             JumpAndGravity();
             GroundedCheck();
-            if(!hanging){
+            MeleeAttack();
+            if (!hanging)
+            {
                 Move();
+            }
+            else
+            {
+                //MoveHanging();
             }
         }
 
@@ -283,39 +297,71 @@ namespace StarterAssets
                     _cinemachineTargetYaw,
                     0.0f);
         }
-        
-        private void LedgeGrab(){
-            if(_controller.velocity.y < 0 && !hanging && !Grounded){
+
+        private void LedgeGrab()
+        {
+            if (_controller.velocity.y < 0 && !hanging && !Grounded)
+            {
                 // This is the raycast that checks if there is a ledge below the player
                 RaycastHit downHit;
+
                 // TODO check magic numbers
-                Vector3 lineDownStart = (transform.position + Vector3.up * 1.8f)+ transform.forward * 0.5f;
-                Vector3 lineDownEnd = (transform.position + Vector3.up * 0.7f)+ transform.forward * 0.5f;
-                Physics.Linecast(lineDownStart, lineDownEnd, out downHit, GroundLayers);
+                Vector3 lineDownStart =
+                    (transform.position + Vector3.up * 1.8f) +
+                    transform.forward * 0.5f;
+                Vector3 lineDownEnd =
+                    (transform.position + Vector3.up * 0.7f) +
+                    transform.forward * 0.5f;
+                Physics
+                    .Linecast(lineDownStart,
+                    lineDownEnd,
+                    out downHit,
+                    GroundLayers);
                 Debug.DrawLine(lineDownStart, lineDownEnd, Color.red);
 
-                if(downHit.collider != null){
+                if (downHit.collider != null)
+                {
                     // This is the raycast that checks if there is a wall in front of the player
                     RaycastHit forwardHit;
-                    Vector3 lineForwardStart = new Vector3(transform.position.x, downHit.point.y-0.1f, transform.position.z);
-                    Vector3 lineForwardEnd = new Vector3(transform.position.x, downHit.point.y-0.1f, transform.position.z) + transform.forward * 0.5f;
-                    Physics.Linecast(lineForwardStart, lineForwardEnd, out forwardHit, GroundLayers);
+                    Vector3 lineForwardStart =
+                        new Vector3(transform.position.x,
+                            downHit.point.y - 0.1f,
+                            transform.position.z);
+                    Vector3 lineForwardEnd =
+                        new Vector3(transform.position.x,
+                            downHit.point.y - 0.1f,
+                            transform.position.z) +
+                        transform.forward * 0.5f;
+                    Physics
+                        .Linecast(lineForwardStart,
+                        lineForwardEnd,
+                        out forwardHit,
+                        GroundLayers);
                     Debug.DrawLine(lineForwardStart, lineForwardEnd, Color.red);
-                    if(forwardHit.collider != null){
-
+                    if (forwardHit.collider != null)
+                    {
                         hanging = true;
                         CanJump = 2;
 
                         _controller.SimpleMove(Vector3.zero);
                         _controller.enabled = false;
-                        
-                        transform.position = new Vector3(transform.position.x, downHit.point.y, transform.position.z);
-                        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
-                         _animator.SetBool("Hanging", true);
-                        Vector3 hangingPosition = new Vector3(forwardHit.point.x, downHit.point.y, forwardHit.point.z);
-                        Vector3 offset = transform.forward * -0.3f + transform.up * -1.5f;
-                        
+                        transform.position =
+                            new Vector3(transform.position.x,
+                                downHit.point.y,
+                                transform.position.z);
+                        transform.rotation =
+                            Quaternion
+                                .Euler(0, transform.rotation.eulerAngles.y, 0);
+
+                        _animator.SetBool("Hanging", true);
+                        Vector3 hangingPosition =
+                            new Vector3(forwardHit.point.x,
+                                downHit.point.y,
+                                forwardHit.point.z);
+                        Vector3 offset =
+                            transform.forward * -0.3f + transform.up * -1.5f;
+
                         hangingPosition += offset;
                         transform.position = hangingPosition;
                         transform.forward = -forwardHit.normal;
@@ -412,6 +458,24 @@ namespace StarterAssets
             }
         }
 
+        private void MeleeAttack()
+        {
+            if (_input.attack && _AttakTimeoutTimer >= _AttackCoolDown)
+            {
+                MeleeWeapon.GetComponentInChildren<Collider>().enabled = true;
+                _animator.SetTrigger("MeleeAttack");
+                _input.attack = false;
+                _AttakTimeoutTimer = 0f;
+            }
+
+            _AttakTimeoutTimer += Time.deltaTime;
+        }
+
+        public void SetMeleeColliderOff()
+        {
+            MeleeWeapon.GetComponentInChildren<Collider>().enabled = false;
+        }
+
         private void JumpAndGravity()
         {
             //Debug.Log("CanJump" + CanJump);
@@ -443,29 +507,32 @@ namespace StarterAssets
                 // Jump if input button is pressed the input timeout is set
                 if (_input.jump && (_jumpTimeoutDelta <= 0.0f))
                 {
-                    if(hanging){
+                    if (hanging)
+                    {
                         _controller.enabled = true;
                         _animator.SetBool("Hanging", false);
-                        hanging=false;
-
+                        hanging = false;
                     }
 
-                        // update animator if using character
-                        if (_hasAnimator)
+                    // update animator if using character
+                    if (_hasAnimator)
+                    {
+                        if (Grounded)
                         {
-                            if(Grounded){
-                                _animator.SetBool(_animIDJump, true);
-                            }else{
-                                _animator.SetTrigger("JumpInAir");
-                            }
+                            _animator.SetBool(_animIDJump, true);
+                        }
+                        else
+                        {
+                            _animator.SetTrigger("JumpInAir");
+                        }
 
                         // the square root of H * -2 * G = how much velocity needed to reach desired height
-                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                        _verticalVelocity =
+                            Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
-                            //decrease remaining jumps
-                            CanJump--;
-                        }
-                    
+                        //decrease remaining jumps
+                        CanJump--;
+                    }
                 }
 
                 // jump timeout
