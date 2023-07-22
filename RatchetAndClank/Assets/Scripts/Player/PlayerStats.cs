@@ -12,13 +12,18 @@ public class PlayerStats : CharacterStats
 
     public int playerMaxHealth = 3;
 
+    public int playerDefaultMaxHealth = 3;
+
     public int playerCurrentHealth = 1;
 
-    private int playerLevel = 1;
+    public int playerLevel = 1;
+
+    private int[]
+        playerLevelExperience = { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45 };
 
     private int playerExperience = 0;
 
-    private float _damageCoolDown = 2f;
+    private float _damageCoolDown = 1f;
 
     private float _damageCoolDownTimer = Mathf.Infinity;
 
@@ -33,8 +38,8 @@ public class PlayerStats : CharacterStats
 
     void Start()
     {
-        CalculateMaxHealth();
         playerCurrentHealth = playerMaxHealth;
+        CalculateMaxHealth();
     }
 
     // - Health - //
@@ -58,7 +63,7 @@ public class PlayerStats : CharacterStats
 
     public void CalculateMaxHealth()
     {
-        playerMaxHealth = playerMaxHealth + playerLevel;
+        playerMaxHealth = 3 + playerLevel;
     }
 
     public void DecreaseHealth(int value)
@@ -214,7 +219,7 @@ public class PlayerStats : CharacterStats
     {
         playerLevel += _playerLevel;
         CalculateMaxHealth();
-        currentHealth = playerMaxHealth;
+        playerCurrentHealth = playerMaxHealth;
     }
 
     // Get the level of the player
@@ -227,6 +232,14 @@ public class PlayerStats : CharacterStats
     public void IncreasePlayerExperience(int _playerExperience)
     {
         playerExperience += _playerExperience;
+        if (
+            playerLevel < (playerLevelExperience.Length - 1) &&
+            (playerExperience + _playerExperience) >=
+            playerLevelExperience[playerLevel]
+        )
+        {
+            IncreasePlayerLevel(1);
+        }
     }
 
     // Get the experience of the player
