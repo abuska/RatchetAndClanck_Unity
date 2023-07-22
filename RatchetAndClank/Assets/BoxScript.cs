@@ -51,9 +51,21 @@ public class BoxScript : MonoBehaviour
         gameObject.GetComponent<Animator>().SetTrigger("Explode_Box");
     }
 
+    public void DamagePlayer()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f);
+        foreach (Collider collider in colliders)
+        {
+            GameObject OtherGameObject = collider.gameObject;
+            if (OtherGameObject.CompareTag("Player"))
+            {
+                OtherGameObject.GetComponent<PlayerStats>().DecreaseHealth(1);
+            }
+        }
+    }
+
     public void ExplodeNearbyBoxes()
     {
-        Debug.Log("ExplodeNearbyBoxes");
         Collider[] colliders = Physics.OverlapSphere(transform.position, 3f);
 
         foreach (Collider collider in colliders)

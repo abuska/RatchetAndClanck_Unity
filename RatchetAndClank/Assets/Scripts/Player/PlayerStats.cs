@@ -10,9 +10,17 @@ public class PlayerStats : CharacterStats
 
     public int playerBolts = 0;
 
+    public int playerMaxHealth = 3;
+
+    public int playerCurrentHealth = 1;
+
     private int playerLevel = 1;
 
     private int playerExperience = 0;
+
+    private float _damageCoolDown = 2f;
+
+    private float _damageCoolDownTimer = Mathf.Infinity;
 
     // - Initial - //
     /**********************************************************************************************/
@@ -25,28 +33,42 @@ public class PlayerStats : CharacterStats
 
     void Start()
     {
-        maxHealth = SetMaxHealthFromHealthLevel();
-        currentHealth = maxHealth;
+        CalculateMaxHealth();
+        playerCurrentHealth = playerMaxHealth;
     }
 
     // - Health - //
     /**********************************************************************************************/
-    private int SetMaxHealthFromHealthLevel()
-    {
-        maxHealth = healthLevel * 10;
-        return 3; //maxHealth;
-    }
-
     // Check the player is can pickup the health item
     public bool CanPickupHealthItem(int PointsRestored)
     {
-        return currentHealth + PointsRestored <= maxHealth;
+        return playerCurrentHealth + PointsRestored <= maxHealth;
     }
 
     // Increase the health of the player
     public void IncreaseHealth(int value)
     {
-        currentHealth = currentHealth + value;
+        playerCurrentHealth = playerCurrentHealth + value;
+    }
+
+    public void IncreaseMaxHealth(int value)
+    {
+        playerMaxHealth = playerMaxHealth + value;
+    }
+
+    public void CalculateMaxHealth()
+    {
+        playerMaxHealth = playerMaxHealth + playerLevel;
+    }
+
+    public void DecreaseHealth(int value)
+    {
+        if (_damageCoolDownTimer >= _damageCoolDown)
+        {
+            _damageCoolDownTimer = 0f;
+            playerCurrentHealth = playerCurrentHealth - value;
+        }
+        _damageCoolDownTimer += Time.deltaTime;
     }
 
     // Take damage and logic for armor
@@ -191,6 +213,8 @@ public class PlayerStats : CharacterStats
     public void IncreasePlayerLevel(int _playerLevel)
     {
         playerLevel += _playerLevel;
+        CalculateMaxHealth();
+        currentHealth = playerMaxHealth;
     }
 
     // Get the level of the player
