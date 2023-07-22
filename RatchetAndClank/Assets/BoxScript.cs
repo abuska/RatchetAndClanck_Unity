@@ -58,7 +58,6 @@ public class BoxScript : MonoBehaviour
 
         foreach (Collider collider in colliders)
         {
-            Debug.Log("Collider Tag: " + collider.gameObject.tag);
             GameObject OtherGameObject = collider.gameObject;
             if (
                 OtherGameObject.CompareTag("Box") &&

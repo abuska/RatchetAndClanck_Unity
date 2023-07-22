@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4693316492205675312}
   - component: {fileID: 7879832810300513823}
   - component: {fileID: 7851647116879620791}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Emitter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 9071045747436740224}
   - component: {fileID: 6777904965977502069}
   - component: {fileID: 6506001277813834402}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Box_Explode
   m_TagString: Box
   m_Icon: {fileID: 0}
@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 9218308895120532018}
   - component: {fileID: 2013105857156471904}
   - component: {fileID: 8676447810459838557}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
