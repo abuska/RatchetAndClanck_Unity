@@ -16,14 +16,15 @@ public class EnemyAnimatorManager : AnimatorManager
         float delta = Time.deltaTime;
 
         if (
-            !GameObject
+            /* !GameObject
                 .Find("GameManager")
                 .GetComponent<GameManager>()
                 .GetIsGamePause() &&
             !GameObject
                 .Find("GameManager")
                 .GetComponent<GameManager>()
-                .GetIsGameOver()
+                .GetIsGameOver()*/
+            true
         )
         {
             if (delta != 0)

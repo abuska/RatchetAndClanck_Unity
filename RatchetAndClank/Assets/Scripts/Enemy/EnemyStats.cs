@@ -26,6 +26,7 @@ public class EnemyStats : CharacterStats
 
     [SerializeField]
     public string EnemyType = "Melee";
+
     public float fireballSpeed = 10f;
 
     private void Awake()
@@ -48,6 +49,7 @@ public class EnemyStats : CharacterStats
 
     public void TakeDamage(int damage)
     {
+        Debug.Log("Enemy Health: " + currentHealth);
         if (currentHealth > 0)
         {
             //todo enemy armor
@@ -67,5 +69,4 @@ public class EnemyStats : CharacterStats
             }
         }
     }
-  
 }

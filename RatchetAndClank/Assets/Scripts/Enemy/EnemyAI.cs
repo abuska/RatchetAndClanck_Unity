@@ -152,7 +152,7 @@ public class EnemyAI : MonoBehaviour
                 Player = GameObject.Find("Player");
                 Player
                     .GetComponent<PlayerStats>()
-                    .TakeDamage(enemyStats.attackDamage);
+                    .DecreaseHealth(enemyStats.attackDamage);
             }
 
             EnemySoundScript soundScript =

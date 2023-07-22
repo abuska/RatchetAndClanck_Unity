@@ -59,7 +59,7 @@ public class EnemyBulletScript : MonoBehaviour
                     GameObject Player;
                     Player = GameObject.Find(hit.transform.gameObject.name);
 
-                    Player.GetComponent<PlayerStats>().TakeDamage(10);
+                    Player.GetComponent<PlayerStats>().DecreaseHealth(10);
 
                     // Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(hit));
                     /*   hit
