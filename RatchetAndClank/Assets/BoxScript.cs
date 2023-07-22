@@ -46,6 +46,12 @@ public class BoxScript : MonoBehaviour
         gameObject.GetComponentInChildren<ParticleSystem>().Play();
     }
 
+    public void PlayAudioSource(AudioClip audioClip)
+    {
+        gameObject.GetComponentInChildren<AudioSource>().clip = audioClip;
+        gameObject.GetComponentInChildren<AudioSource>().Play();
+    }
+
     private void Emit()
     {
         gameObject.GetComponentInChildren<ObjectEmitter>().Emit();

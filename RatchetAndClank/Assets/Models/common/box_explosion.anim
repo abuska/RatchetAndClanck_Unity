@@ -144,10 +144,26 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0
+    functionName: PlayAudioSource
+    data: 
+    objectReferenceParameter: {fileID: 8300000, guid: 299c20a30debdf64189d94c0eca11ed5,
+      type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 1.5333333
     functionName: EnambleParticleSystem
     data: 
     objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.6
+    functionName: PlayAudioSource
+    data: 
+    objectReferenceParameter: {fileID: 8300000, guid: e94385ae26bc9854bbe4591746c705a9,
+      type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

@@ -49,7 +49,6 @@ public class Collectible : MonoBehaviour
                         // CollectibleType.PickUp();
                         if (audioSource != null)
                         {
-                            PlayAudio();
                             GameObject
                                 .FindGameObjectWithTag("Player")
                                 .GetComponent<PlayerStats>()
@@ -59,6 +58,8 @@ public class Collectible : MonoBehaviour
                                 .GetComponent<PlayerStats>()
                                 .IncreasePlayerExperience(1);
                             GetComponent<MeshRenderer>().enabled = false;
+
+                            PlayAudio();
                             return; // Exit the method to wait for audio to finish playing
                         }
                     }
@@ -74,7 +75,6 @@ public class Collectible : MonoBehaviour
             audioSource.Play();
             isAudioPlaying = true;
             StartCoroutine(WaitForAudio());
-            Destroy (gameObject);
         }
     }
 
@@ -82,5 +82,6 @@ public class Collectible : MonoBehaviour
     {
         yield return new WaitForSeconds(audioSource.clip.length);
         isAudioPlaying = false;
+        Destroy (gameObject);
     }
 }
