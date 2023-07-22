@@ -8,6 +8,8 @@ public class PlayerStats : CharacterStats
 
     private int playerScore = 0;
 
+    public int playerBolts = 0;
+
     private int playerLevel = 1;
 
     private int playerExperience = 0;
@@ -32,13 +34,13 @@ public class PlayerStats : CharacterStats
     private int SetMaxHealthFromHealthLevel()
     {
         maxHealth = healthLevel * 10;
-        return 100; //maxHealth;
+        return 3; //maxHealth;
     }
 
     // Check the player is can pickup the health item
     public bool CanPickupHealthItem(int PointsRestored)
     {
-        return currentHealth + PointsRestored <= 200;
+        return currentHealth + PointsRestored <= maxHealth;
     }
 
     // Increase the health of the player
@@ -126,6 +128,31 @@ public class PlayerStats : CharacterStats
             .GetComponent<GunScript>()
             .enabled = true;*/
         // player.GetComponent<PlayerMovementScript>().enabled = true;
+    }
+
+    //- Bolts -//
+    /**********************************************************************************************/
+    // Get the bolts of the player
+    public int GetPlayerBolts()
+    {
+        return playerBolts;
+    }
+
+    public void IncreaseBolts(int _playerBolts)
+    {
+        playerBolts += _playerBolts;
+    }
+
+    public void DecreaseBolts(int _playerBolts)
+    {
+        if (playerBolts -= _playerBolts >= 0)
+        {
+            playerBolts -= _playerBolts;
+        }
+        else
+        {
+            playerBolts = 0;
+        }
     }
 
     // - Armor - //
