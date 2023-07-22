@@ -9,6 +9,7 @@ TagManager:
   - SecondCamera
   - BulletSpawn
   - Dummie
+  - Box
   layers:
   - Default
   - TransparentFX

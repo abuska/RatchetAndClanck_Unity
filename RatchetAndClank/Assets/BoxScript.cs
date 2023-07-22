@@ -25,6 +25,12 @@ public class BoxScript : MonoBehaviour
     {
     }
 
+    /*void OnDrawGizmos()
+    {
+        // Draw a yellow sphere at the transform's position
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, 3f);
+    }*/
     private void DestroyBox()
     {
         Destroy (gameObject);
@@ -40,6 +46,31 @@ public class BoxScript : MonoBehaviour
         gameObject.GetComponentInChildren<ObjectEmitter>().Emit();
     }
 
+    public void ExplodeBox()
+    {
+        gameObject.GetComponent<Animator>().SetTrigger("Explode_Box");
+    }
+
+    public void ExplodeNearbyBoxes()
+    {
+        Debug.Log("ExplodeNearbyBoxes");
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f);
+
+        foreach (Collider collider in colliders)
+        {
+            Debug.Log("Collider Tag: " + collider.gameObject.tag);
+            GameObject OtherGameObject = collider.gameObject;
+            if (
+                OtherGameObject.CompareTag("Box") &&
+                OtherGameObject.GetComponent<BoxScript>().boxType ==
+                BoxTypeEnum.Explosive
+            )
+            {
+                OtherGameObject.GetComponent<BoxScript>().ExplodeBox();
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         switch (boxType)
@@ -51,7 +82,10 @@ public class BoxScript : MonoBehaviour
                 ) return;
 
                 //todo damage player/enemies in animation
-                gameObject.GetComponent<Animator>().SetTrigger("Explode_Box");
+                ExplodeBox();
+
+                //todo play explosion sound
+                //todo add chain reaction
                 break;
             case BoxTypeEnum.Normal:
             default:

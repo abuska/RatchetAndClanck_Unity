@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 6506001277813834402}
   m_Layer: 0
   m_Name: Box_Explode
-  m_TagString: Untagged
+  m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
