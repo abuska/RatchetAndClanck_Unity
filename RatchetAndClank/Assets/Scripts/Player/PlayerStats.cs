@@ -145,7 +145,7 @@ public class PlayerStats : CharacterStats
 
     public void DecreaseBolts(int _playerBolts)
     {
-        if (playerBolts -= _playerBolts >= 0)
+        if ((playerBolts -= _playerBolts) >= 0)
         {
             playerBolts -= _playerBolts;
         }
