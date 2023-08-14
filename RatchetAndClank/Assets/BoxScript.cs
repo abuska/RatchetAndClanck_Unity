@@ -14,7 +14,7 @@ public class BoxScript : MonoBehaviour
 
     public BoxTypeEnum boxType;
 
-    public float explosionRange = 2f;
+    public float explosionRange = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,10 +25,7 @@ public class BoxScript : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
+
 
     /*void OnDrawGizmos()
     {
