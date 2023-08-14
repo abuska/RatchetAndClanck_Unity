@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerStats : CharacterStats
 {
@@ -27,6 +28,8 @@ public class PlayerStats : CharacterStats
 
     private float _damageCoolDownTimer = Mathf.Infinity;
 
+    public GameObject _uiBoltsTextComponent;
+
     // - Initial - //
     /**********************************************************************************************/
     // Start is called before the first frame update
@@ -40,6 +43,12 @@ public class PlayerStats : CharacterStats
     {
         playerCurrentHealth = playerMaxHealth;
         CalculateMaxHealth();
+        _uiBoltsTextComponent.GetComponent<TextMeshProUGUI>().text= playerBolts.ToString();
+    }
+
+    public void Update()
+    {
+        _uiBoltsTextComponent.GetComponent<TextMeshProUGUI>().text = playerBolts.ToString();
     }
 
     // - Health - //
