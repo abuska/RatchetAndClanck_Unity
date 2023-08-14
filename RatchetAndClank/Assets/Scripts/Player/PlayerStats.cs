@@ -75,7 +75,7 @@ public class PlayerStats : CharacterStats
 
     public void CalculateMaxHealth()
     {
-        playerMaxHealth = 3 + playerLevel;
+        playerMaxHealth = 2 + playerLevel;
     }
 
     public void DecreaseHealth(int value)

@@ -45,7 +45,6 @@ public class ObjectEmitter : MonoBehaviour
         if (canBeTriggered)
         {
             if (!other.gameObject.CompareTag("Weapon")) return;
-            Debug.Log("Emit Triggered");
             Emit();
         }
     }
