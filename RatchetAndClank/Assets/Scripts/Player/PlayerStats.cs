@@ -20,7 +20,7 @@ public class PlayerStats : CharacterStats
     public int playerLevel = 1;
 
     private int[]
-        playerLevelExperience = { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45 };
+        playerLevelExperience = { 0, 30, 90, 180, 300, 450, 630, 840, 1080, 1350 };
 
     private int playerExperience = 0;
 
@@ -29,6 +29,7 @@ public class PlayerStats : CharacterStats
     private float _damageCoolDownTimer = Mathf.Infinity;
 
     public GameObject _uiBoltsTextComponent;
+    public GameObject _uiHealthTextComponent;
 
     // - Initial - //
     /**********************************************************************************************/
@@ -44,11 +45,13 @@ public class PlayerStats : CharacterStats
         playerCurrentHealth = playerMaxHealth;
         CalculateMaxHealth();
         _uiBoltsTextComponent.GetComponent<TextMeshProUGUI>().text= playerBolts.ToString();
+        _uiHealthTextComponent.GetComponent<TextMeshProUGUI>().text = playerCurrentHealth.ToString();
     }
 
     public void Update()
     {
         _uiBoltsTextComponent.GetComponent<TextMeshProUGUI>().text = playerBolts.ToString();
+        _uiHealthTextComponent.GetComponent<TextMeshProUGUI>().text = playerCurrentHealth.ToString();
     }
 
     // - Health - //
