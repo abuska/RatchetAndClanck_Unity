@@ -2,8 +2,8 @@
 #if ENABLE_INPUT_SYSTEM
 
 using UnityEngine.InputSystem;
+    
 #endif
-
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
@@ -84,7 +84,10 @@ namespace StarterAssets
         public LayerMask GroundLayers;
 
         [Header("Hanging")]
-        public bool hanging;
+        public bool hanging; 
+
+        [Header("Grappling")]
+        public bool isGrappling;
 
         [Header("Cinemachine")]
         [
@@ -155,6 +158,7 @@ namespace StarterAssets
 
 
         private Animator _animator;
+        private PlayerStats _playerStats;
 
         private CharacterController _controller;
 
@@ -166,6 +170,7 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
+    
         private bool IsCurrentDeviceMouse
         {
             get
@@ -197,12 +202,13 @@ namespace StarterAssets
             _input = GetComponent<StarterAssetsInputs>();
             MeleeWeapon = GameObject.Find("MonkeyWrench");
             MeleeWeapon.GetComponentInChildren<Collider>().enabled = false;
+            _playerStats = GetComponent<PlayerStats>();
 
 
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+            Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
 
@@ -220,9 +226,12 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             MeleeAttack();
-            if (!hanging)
+            //TODO IMPLEMENT GRAPPLING
+           // GrapplingCheck();
+            if (!hanging  && !isGrappling)
             {
                 Move();
+
             }
             else
             {
@@ -242,8 +251,18 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            //_animIDGrapple = Animator.StringToHash("Grappling");
         }
-
+        private void GrapplingCheck()
+        {
+           if (isGrappling){
+                _controller.enabled = false;
+                //_animator.SetBool("Grappling", true);
+                _playerStats.currentPlayerMovementStatus = PlayerMovementStatusEnum.Grappling;
+            }
+            _controller.enabled = true;
+            isGrappling = false;
+        }
         private void GroundedCheck()
         {
             // set sphere position, with offset
@@ -260,6 +279,12 @@ namespace StarterAssets
             if (Grounded)
             {
                 CanJump = 2;
+             //   GameObject gun = GameObject.Find("Gun");
+             //   gun.GetComponent<GrapplingGun>().StopGrapple();
+            }
+            if(isGrappling){
+                Grounded = false;
+                CanJump = 1 ;
             }
 
             // update animator if using character
@@ -300,7 +325,7 @@ namespace StarterAssets
 
         private void LedgeGrab()
         {
-            if (_controller.velocity.y < 0 && !hanging && !Grounded)
+            if (_controller.velocity.y < 0 && !hanging && !Grounded && !isGrappling )
             {
                 // This is the raycast that checks if there is a ledge below the player
                 RaycastHit downHit;
@@ -365,6 +390,8 @@ namespace StarterAssets
                         hangingPosition += offset;
                         transform.position = hangingPosition;
                         transform.forward = -forwardHit.normal;
+                        _playerStats.currentPlayerMovementStatus = PlayerMovementStatusEnum.Hanging;
+
                     }
                 }
             }
@@ -477,98 +504,101 @@ namespace StarterAssets
         }
 
         private void JumpAndGravity()
-        {
-            //Debug.Log("CanJump" + CanJump);
-            if ((Grounded || CanJump > 0) || hanging)
+        { 
+            if (_playerStats.currentPlayerMovementStatus != PlayerMovementStatusEnum.Grappling)
             {
-                // reset the fall timeout timer
-                _fallTimeoutDelta = FallTimeout;
-
-                // update animator if using character
-                if (_hasAnimator)
+            //Debug.Log("CanJump" + CanJump);
+                if ((Grounded || CanJump > 0) || hanging)
                 {
-                    _animator.SetBool(_animIDJump, false);
-                    _animator.SetBool(_animIDFreeFall, false);
-                }
-
-                // stop our velocity dropping infinitely when grounded
-                if (_verticalVelocity < 0.0f)
-                {
-                    if (Grounded)
-                    {
-                        _verticalVelocity = -2f;
-                    }
-                    else
-                    {
-                        _verticalVelocity -= -0.01f;
-                    }
-                }
-
-                // Jump if input button is pressed the input timeout is set
-                if (_input.jump && (_jumpTimeoutDelta <= 0.0f))
-                {
-                    if (hanging)
-                    {
-                        _controller.enabled = true;
-                        _animator.SetBool("Hanging", false);
-                        hanging = false;
-                    }
+                    // reset the fall timeout timer
+                    _fallTimeoutDelta = FallTimeout;
 
                     // update animator if using character
                     if (_hasAnimator)
+                    {
+                        _animator.SetBool(_animIDJump, false);
+                        _animator.SetBool(_animIDFreeFall, false);
+                    }
+
+                    // stop our velocity dropping infinitely when grounded
+                    if (_verticalVelocity < 0.0f)
                     {
                         if (Grounded)
                         {
-                            _animator.SetBool(_animIDJump, true);
+                            _verticalVelocity = -2f;
                         }
                         else
                         {
-                            _animator.SetTrigger("JumpInAir");
+                            _verticalVelocity -= -0.01f;
+                        }
+                    }
+
+                    // Jump if input button is pressed the input timeout is set
+                    if (_input.jump && (_jumpTimeoutDelta <= 0.0f))
+                    {
+                        if (hanging)
+                        {
+                            _controller.enabled = true;
+                            _animator.SetBool("Hanging", false);
+                            hanging = false;
                         }
 
-                        // the square root of H * -2 * G = how much velocity needed to reach desired height
-                        _verticalVelocity =
-                            Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                        // update animator if using character
+                        if (_hasAnimator)
+                        {
+                            if (Grounded)
+                            {
+                                _animator.SetBool(_animIDJump, true);
+                            }
+                            else
+                            {
+                                _animator.SetTrigger("JumpInAir");
+                            }
 
-                        //decrease remaining jumps
-                        CanJump--;
+                            // the square root of H * -2 * G = how much velocity needed to reach desired height
+                            _verticalVelocity =
+                                Mathf.Sqrt(JumpHeight * -2f * Gravity);
+
+                            //decrease remaining jumps
+                            CanJump--;
+                        }
                     }
-                }
 
-                // jump timeout
-                if (_jumpTimeoutDelta >= 0.0f)
-                {
-                    _jumpTimeoutDelta -= Time.deltaTime;
-                }
-                _input.jump = false;
-            }
-            else
-            {
-                // reset the jump timeout timer
-                _jumpTimeoutDelta = JumpTimeout;
-
-                // fall timeout
-                if (_fallTimeoutDelta >= 0.0f)
-                {
-                    _fallTimeoutDelta -= Time.deltaTime;
+                    // jump timeout
+                    if (_jumpTimeoutDelta >= 0.0f)
+                    {
+                        _jumpTimeoutDelta -= Time.deltaTime;
+                    }
+                    _input.jump = false;
                 }
                 else
                 {
-                    // update animator if using character
-                    if (_hasAnimator)
+                    // reset the jump timeout timer
+                    _jumpTimeoutDelta = JumpTimeout;
+
+                    // fall timeout
+                    if (_fallTimeoutDelta >= 0.0f)
                     {
-                        _animator.SetBool(_animIDFreeFall, true);
+                        _fallTimeoutDelta -= Time.deltaTime;
                     }
+                    else
+                    {
+                        // update animator if using character
+                        if (_hasAnimator)
+                        {
+                            _animator.SetBool(_animIDFreeFall, true);
+                        }
+                    }
+
+                    // if we are not grounded, do not jump
+                    // _input.jump = false;
                 }
 
-                // if we are not grounded, do not jump
-                // _input.jump = false;
-            }
-
-            // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-            if (_verticalVelocity < _terminalVelocity)
-            {
-                _verticalVelocity += Gravity * Time.deltaTime;
+                // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+                if (_verticalVelocity < _terminalVelocity)
+                {
+                    _verticalVelocity += Gravity * Time.deltaTime;
+                }
             }
         }
 
@@ -623,4 +653,7 @@ namespace StarterAssets
             }
         }
     }
+
+
+
 }

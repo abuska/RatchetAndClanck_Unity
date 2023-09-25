@@ -19,6 +19,7 @@ public class PlayerStats : CharacterStats
 
     public int playerLevel = 1;
 
+
     private int[]
         playerLevelExperience = { 0, 30, 90, 180, 300, 450, 630, 840, 1080, 1350 };
 
@@ -30,6 +31,8 @@ public class PlayerStats : CharacterStats
 
     public GameObject _uiBoltsTextComponent;
     public GameObject _uiHealthTextComponent;
+    public PlayerMovementStatusEnum currentPlayerMovementStatus;
+
 
     // - Initial - //
     /**********************************************************************************************/
@@ -46,6 +49,7 @@ public class PlayerStats : CharacterStats
         CalculateMaxHealth();
         _uiBoltsTextComponent.GetComponent<TextMeshProUGUI>().text= playerBolts.ToString();
         _uiHealthTextComponent.GetComponent<TextMeshProUGUI>().text = playerCurrentHealth.ToString();
+        currentPlayerMovementStatus = PlayerMovementStatusEnum.Standing;
     }
 
     public void Update()
@@ -53,6 +57,8 @@ public class PlayerStats : CharacterStats
         _uiBoltsTextComponent.GetComponent<TextMeshProUGUI>().text = playerBolts.ToString();
         _uiHealthTextComponent.GetComponent<TextMeshProUGUI>().text = playerCurrentHealth.ToString();
     }
+
+
 
     // - Health - //
     /**********************************************************************************************/

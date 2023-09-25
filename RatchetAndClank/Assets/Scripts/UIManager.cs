@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
         MainMenuUI = GameObject.Find("MainMenu");
         LoadMenuUI = GameObject.Find("LoadMenu");
         SaveMenuUI = GameObject.Find("SaveMenu");
+        LoadMenuUI = GameObject.Find("UIBoltContainer");
+        SaveMenuUI = GameObject.Find("UIHealthContainer");
         DisableGameMenu();
         DisableLoadMenu();
         DisableSaveMenu();
