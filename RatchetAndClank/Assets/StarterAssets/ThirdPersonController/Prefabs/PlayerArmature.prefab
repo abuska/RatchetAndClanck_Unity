@@ -1240,6 +1240,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 513
   hanging: 0
+  isGrappling: 0
   CinemachineCameraTarget: {fileID: 8338988566280778634}
   TopClamp: 70
   BottomClamp: -30
@@ -1398,7 +1399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2043968687281369652
 Transform:
   m_ObjectHideFlags: 0
@@ -1529,6 +1530,9 @@ MonoBehaviour:
   whatIsGrappleable:
     serializedVersion: 2
     m_Bits: 1024
+  gunTip: {fileID: 0}
+  camera: {fileID: 0}
+  player: {fileID: 0}
 --- !u!1 &4523139366846529165
 GameObject:
   m_ObjectHideFlags: 0
