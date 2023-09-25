@@ -15,15 +15,12 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private static GameObject SaveMenuUI;
 
-
     private void Awake()
     {
         GameMenuUI = GameObject.Find("GameMenu");
         MainMenuUI = GameObject.Find("MainMenu");
         LoadMenuUI = GameObject.Find("LoadMenu");
         SaveMenuUI = GameObject.Find("SaveMenu");
-        LoadMenuUI = GameObject.Find("UIBoltContainer");
-        SaveMenuUI = GameObject.Find("UIHealthContainer");
         DisableGameMenu();
         DisableLoadMenu();
         DisableSaveMenu();

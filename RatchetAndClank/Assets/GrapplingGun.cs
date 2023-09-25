@@ -24,7 +24,8 @@ namespace StarterAssets
         }
         else if (Input.GetMouseButtonUp(0))
         {
-             StopGrapple();
+            //TODO implement grapple
+            // StopGrapple();
 
         }
         
